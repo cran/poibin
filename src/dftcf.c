@@ -5,6 +5,7 @@
 #include <R_ext/Applic.h>
 
 
+
 static void fftmx(double *a, double *b, int ntot, int n, int nspan, int isn,
 		  int m, int kt, double *at, double *ck, double *bt, double *sk,
 		  int *np, int *nfac)
@@ -65,7 +66,9 @@ static void fftmx(double *a, double *b, int ntot, int n, int nspan, int isn,
     maxf = nfac[m - kt];
     if(kt > 0) maxf = imax2(nfac[kt],maxf);
 
-	/* compute fourier transform */
+
+
+  /* compute fourier transform */
 
 L_start:
     dr = (8.0*jc)/kspan;
@@ -74,6 +77,9 @@ L_start:
     sd = sin(dr*rad);
     kk = 1;
     i++;
+    
+    //Rprintf("%u \n",nfac[i]);
+    
     if( nfac[i] != 2) goto L110;
 
 /* transform for factor of 2 (including rotation factor) */
@@ -165,14 +171,20 @@ L100:
     a[k2] = ak + bj;
     b[k2] = bk - aj;
     kk = k2 + kspan;
+
+
     if( kk < nn) goto L100;
+    //Rprintf("%u, %u\n",kk,nn);
     kk = kk - nn;
+
     if( kk <= kspan) goto L100;
+
     goto L290;
 
 /* transform for factor of 4 */
 
 L110:
+    //Rprintf("%u \n",nfac[i]);
     if( nfac[i] != 4) goto L_f_odd;
     kspnn = kspan;
     kspan /= 4;
@@ -217,6 +229,9 @@ L150:
     bjm = b[k1] - b[k3];
     b[kk] = bkp + bjp;
     bjp = bkp - bjp;
+
+   // Rprintf("%d \n",isn);
+
     if( isn < 0) goto L180;
     akp = akm - bjm;
     akm = akm + bjm;
@@ -231,12 +246,27 @@ L160:
     a[k3] = akm*c3 - bkm*s3;
     b[k3] = akm*s3 + bkm*c3;
     kk = k3 + kspan;
+    
+    //Rprintf("%u,%u,%u,%u \n", kk,nt,k3,kspan);
+    
     if( kk <= nt) goto L150;
 L170:
     kk = kk - nt + jc;
+
     if( kk <= mm) goto L130;
-    if( kk < kspan) goto L200;
+    /*
+    if(kk==kspan)
+    {
+     Rprintf("%u,%u \n", kk,kspan);
+    }
+    */
+    
+    /*the original C code was kk<kspan, different from the original fortran code,
+    which is kk<=kspan, modified to kk<=kspan*/
+    if( kk <= kspan) goto L200;
+    //Rprintf("%u,%u,%u \n", kk,inc,kspan);
     kk = kk - kspan + inc;
+    //Rprintf("%u,%u \n", kk,jc);
     if(kk <= jc) goto L120;
     if(kspan == jc) goto L_fin;
     goto L_start;
@@ -245,7 +275,9 @@ L180:
     akm = akm - bjm;
     bkp = bkm - ajm;
     bkm = bkm + ajm;
+    
     if( s1 != 0.0) goto L160;
+
 L190:
     a[k1] = akp;
     b[k1] = bkp;
@@ -256,6 +288,7 @@ L190:
     kk = k3 + kspan;
     if( kk <= nt) goto L150;
     goto L170;
+
 L200:
     s1 = ((kk-1)/jc)*dr*rad;
     c1 = cos(s1);
@@ -390,14 +423,16 @@ L270:
 /* multiply by rotation factor (except for factors of 2 and 4) */
 
 L290:
+    //Rprintf("%u, %u\n",i,m);
     if(i == m) goto L_fin;
     kk = jc + 1;
 L300:
     c2 = 1.0 - cd;
     s1 = sd;
     mm = imin2(kspan,klim);
-
+  //Rprintf("%u,%u,%u,%u,%u,%u,%u,%u\n",kk,kspan,kspnn,nt,jc,mm,inc,klim) ;
     do { /* L320: */
+
 	c1 = c2;
 	s2 = s1;
 	kk += kspan;
@@ -411,9 +446,14 @@ L300:
 	    ak = s1*s2;
 	    s2 = s1*c2 + c1*s2;
 	    c2 = c1*c2 - ak;
+	// Rprintf("%u\n",kk) ;
 	    kk += -nt + kspan;
+	    
+	   //Rprintf("%u,%u,%u,%u\n",kk,kspnn,kspan,nt) ;
 	} while(kk <= kspnn);
+	//Rprintf("%u,%u,%u,%u,%u\n",kk,kspnn,jc,kspan,inc);
 	kk += -kspnn + jc;
+	//Rprintf("%u,%u,%u,%u,%u,%u\n",kk,kspnn,jc,kspan,inc,m);
 	if(kk <= mm) { /* L310: */
 	    c2 = c1 - (cd*c1+sd*s1);
 	    s1 = s1 + (sd*c1-cd*s1);
@@ -426,8 +466,14 @@ L300:
 #endif
 	    continue/* goto L320*/;
 	}
-	if(kk >= kspan) {
-	    kk = kk - kspan + jc + inc;
+
+  /* the original c code was if(kk >= kspan), seems to be an error, slightly different from the
+  fortran code, thus it is fixed to if(kk>kspan)*/
+	if(kk > kspan) {
+
+      //Rprintf("%u,%u,%u,%u\n",kk,kspan,jc,inc);
+
+      kk = kk - kspan + jc + inc;
 	    if( kk <= jc+jc) goto L300;
 	    goto L_start;
 	}
@@ -747,9 +793,10 @@ Rboolean fft_work(double *a, double *b, int nseg, int n, int nspn, int isn,
 }
 
 //*****************************************************************************//
-void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double *avec, double *bvec,int *funcate,double *ex)
+void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double *avec,
+double *bvec,int *funcate,double *ex,int *npp, int *wts)
 {
-  int i,j,k,kk,m;
+  int i,j,k,kk,m,wtsj;
   double a2, b2, c1,c2;
   double tmp1,tmp2,ax,bx,pj;
   double tt,delta,tres;
@@ -770,17 +817,18 @@ void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double
      c1=0.00;
      c2=0.00;
      tt=i*delta;
-     for(j=0;j<*n;j++)
+     for(j=0;j<*npp;j++)
      {
        pj=pp[j];
+       wtsj=wts[j];
        //Rprintf("%u,%lf \n",j, pj);
        ax=1-pj+pj*cos(tt);
        bx=pj*sin(tt);
        tmp1=sqrt(ax*ax+bx*bx);
        tmp2=atan2(bx,ax); //atan2(x,y)
        //Rprintf("%lf,%lf,%lf \n", bx, ax,tmp2);
-       c1+=log(tmp1);
-       c2+=tmp2;
+       c1+=wtsj*log(tmp1);
+       c2+=wtsj*tmp2;
      }
      a2=exp(c1)*cos(c2);
      b2=exp(c1)*sin(c2);
@@ -789,14 +837,23 @@ void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double
      avec[m-i]=a2;
      bvec[m-i]=-b2;
   }
-
+  
+  
+   /*debug
+   for(i=0; i<m; i++)
+   {
+    Rprintf("%lf,%lf \n", avec[i], bvec[i]);
+   }
+   //end debug
+   */
+   
   //try fft here
    maxf=0;
    maxp=0;
    
    fft_factor(m, &maxf, &maxp);
    
-   //Rprintf("%u, %u, %u \n", m,maxf,maxp);
+   //Rprintf("%u, %u, %u,%u,%u,%u,%u,%u \n", m,maxf,maxp,nfac[0],nfac[1],nfac[2],nfac[3],m_fac);
 
    work = (double*)R_alloc(4*maxf, sizeof(double));
    iwork = (int*)R_alloc(maxp, sizeof(int));
@@ -823,6 +880,16 @@ void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double
   //pmf *funcate=2
   if((*funcate)==2)
   {
+  
+   /*
+   //debug
+   for(i=0; i<m; i++)
+   {
+    Rprintf("%lf,%lf \n", avec[i], bvec[i]);
+   }
+   //end debug
+   */
+   
    for(k=0;k<*nn; k++)
    {
     kk=nvec[k];
@@ -852,7 +919,7 @@ void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double
            while((kk==0) && (i<(*n)))
            {
              //Rprintf("%u,%u,%u,%lf,%lf,%lf \n", kk, i,*n,tmp1,avec[i],avec[i+1]);
-             if((avec[i]<=tmp1) && (avec[i+1]>tmp1))
+             if((avec[i]<tmp1) && (avec[i+1]>=tmp1))
              {
               res[k]=i+1;
               kk=1;
@@ -860,45 +927,10 @@ void multi_bin_dft_cf(double *res, int *nvec, int *nn, int *n, double *pp,double
              i++;
            }
          }
-    if(tmp1==1.0)
+    if(tmp1>1.0)
     {
       res[k]=(*n);
     }
-   }
-  }
-  //random variable *funcate=4
-  if((*funcate)==4)
-  {
-   avec[0]/=m;
-   for(i=1;i<=(*n);i++)
-   {
-    tres=avec[i]/m;
-    avec[i]=tres+avec[i-1];
-   }
-
-   for(k=0;k<*nn; k++)
-   {
-    tmp1=ex[k];
-    if(tmp1<=avec[0])
-    {
-      res[k]=0.0;
-    }else{
-          kk=0;
-          i=0;
-          while((kk==0) && (i<(*n)))
-          {
-            if((avec[i]<=tmp1) && (avec[i+1]>tmp1))
-            {
-              res[k]=i+1;
-              kk=1;
-            }
-             i++;
-          }
-        }
-      if(tmp1==1.0)
-      {
-       res[k]=(*n);
-      }
    }
   }
     return;

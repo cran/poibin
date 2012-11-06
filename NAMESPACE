@@ -1,5 +1,3 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
+export(ppoibin, dpoibin, qpoibin, rpoibin)
+useDynLib(poibin)
 
-# Export all names
-exportPattern(".")
