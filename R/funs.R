@@ -95,8 +95,9 @@ dpoibin <-function(kk,pp,wts=NULL)
  res=tmp[[1]]
 
  res[res<0]=0
- res[kk<0|kk>=sum(wts)]=0
-
+ #res[kk<0|kk>=sum(wts)]=0
+ res[kk<0|kk>sum(wts)]=0
+ #modified on 13 Feb 2013, reported bug by user.
  return(res)
 }
 
