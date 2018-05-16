@@ -38,7 +38,7 @@ See the reference for computational details.
       Returns the entire cdf, pmf, quantiles, and random numbers.
 }
 \references{
-Hong, Y. (2012). On computing the distribution function for the Poisson binomial distribution. Computational Statistics & Data Analysis. Available online, http://dx.doi.org/10.1016/j.csda.2012.10.006.
+Hong, Y. (2013). On computing the distribution function for the Poisson binomial distribution. Computational Statistics & Data Analysis, Vol. 59, pp. 41-51.
 }
 \author{
 

@@ -3,35 +3,26 @@
 \alias{poibin}
 \docType{package}
 \title{
-The Poisson Binomial Distribution.
-
+\packageTitle{poibin}
 }
 \description{
-The cdf, pmf, quantile function, and random number generation for the Poisson binomial distribution.
-
+\packageDescription{poibin}
 }
 \details{
-\tabular{ll}{
-Package: \tab poibin\cr
-Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2012-11-07\cr
-License: \tab GPL-2 \cr
-LazyLoad: \tab yes\cr
-}
 
-This package implements both the exact and approximation methods for computing the cdf of the Poisson binomial distribution. It also provides the pmf, quantile function, and random number generation for the Poisson binomial distribution.
+\packageDESCRIPTION{poibin}
+\packageIndices{poibin}
 
 }
 \author{
-Yili Hong
+\packageAuthor{poibin}
 
-Maintainer: Yili Hong <yilihong@vt.edu>
-
+Maintainer: \packageMaintainer{poibin}
 }
 \references{
-Hong, Y. (2012). On computing the distribution function for the Poisson binomial distribution. Computational Statistics & Data Analysis. Available online, http://dx.doi.org/10.1016/j.csda.2012.10.006.
+Hong, Y. (2013). On computing the distribution function for the Poisson binomial distribution. Computational Statistics & Data Analysis, Vol. 59, pp. 41-51.
 }
+
 \keyword{ package }
 
 \examples{
