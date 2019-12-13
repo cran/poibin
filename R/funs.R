@@ -64,7 +64,14 @@ ppoibin <-function(kk,pp,method="DFT-CF",wts=NULL)
               gammak=sum(pp*(1-pp)*(1-2*pp))
               kk1=(kk+.5-muk)/sigmak
               res=pnorm(kk1)
+           },
+
+  "PA"=    {
+              pp=rep(pp,wts)
+              muk=sum(pp)
+              res=ppois(q=kk, lambda=muk)
            }
+           
   )
 
   return(res)

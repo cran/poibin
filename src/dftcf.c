@@ -28,7 +28,7 @@ static void fftmx(double *a, double *b, int ntot, int n, int nspan, int isn,
 
     a--; b--; at--; ck--; bt--; sk--;
     np--;
-    nfac--;/*the global one!*/
+    //nfac--;/*the global one!*/
 
     inc = abs(isn);
     nt = inc*ntot;
@@ -63,8 +63,8 @@ static void fftmx(double *a, double *b, int ntot, int n, int nspan, int isn,
     klim = lim*jc;
     i = 0;
     jf = 0;
-    maxf = nfac[m - kt];
-    if(kt > 0) maxf = imax2(nfac[kt],maxf);
+    maxf = nfac[m - kt-1];
+    if(kt > 0) maxf = imax2(nfac[kt-1],maxf);
 
 
 
@@ -80,7 +80,7 @@ L_start:
     
     //Rprintf("%u \n",nfac[i]);
     
-    if( nfac[i] != 2) goto L110;
+    if( nfac[i-1] != 2) goto L110;
 
 /* transform for factor of 2 (including rotation factor) */
 
@@ -185,7 +185,7 @@ L100:
 
 L110:
     //Rprintf("%u \n",nfac[i]);
-    if( nfac[i] != 4) goto L_f_odd;
+    if( nfac[i-1] != 4) goto L_f_odd;
     kspnn = kspan;
     kspan /= 4;
 L120:
@@ -343,7 +343,7 @@ L220:
 /* transform for odd factors */
 
 L_f_odd:
-    k = nfac[i];
+    k = nfac[i-1];
     kspnn = kspan;
     kspan /= k;
     if(k == 3) goto L100;
@@ -496,8 +496,8 @@ L_fin:
     if( m < k) k--;
     np[k+1] = jc;
     for(j = 1; j < k; j++, k--) {
-	np[j+1] = np[j]/nfac[j];
-	np[k] = np[k+1]*nfac[j];
+	np[j+1] = np[j]/nfac[j-1];
+	np[k] = np[k+1]*nfac[j-1];
     }
     k3 = np[k+1];
     kspan = np[2];
@@ -566,11 +566,11 @@ L440:
 
     /* Here, nfac[] is overwritten... -- now CUMULATIVE ("cumprod") factors */
     nn = m - kt;
-    nfac[nn+1] = 1;
+    nfac[nn+1-1] = 1;
     for(j = nn; j > kt; j--)
-	nfac[j] *= nfac[j+1];
+	nfac[j-1] *= nfac[j+1-1];
     kt++;
-    nn = nfac[kt] - 1;
+    nn = nfac[kt-1] - 1;
     jj = 0;
     j = 0;
     goto L480;
@@ -578,15 +578,15 @@ L460:
     jj -= k2;
     k2 = kk;
     k++;
-    kk = nfac[k];
+    kk = nfac[k-1];
 L470:
     jj += kk;
     if( jj >= k2) goto L460;
     np[j] = jj;
 L480:
-    k2 = nfac[kt];
+    k2 = nfac[kt-1];
     k = kt + 1;
-    kk = nfac[k];
+    kk = nfac[k-1];
     j++;
     if( j <= nn) goto L470;
 

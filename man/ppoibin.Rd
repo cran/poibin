@@ -22,7 +22,7 @@ rpoibin(m, pp,wts=NULL)
   \item{pp}{ The vector for \eqn{p_j}'s which are the sucess probabilities for indicators.
 }
   \item{method}{ "DFT-CF" for the DFT-CF method, "RF" for the recursive formula, "RNA" for the refined normal approximation,
-    "NA" for the normal approximation.
+    "NA" for the normal approximation, and "PA" for the Poisson approximation.
 }
   \item{wts}{ The weights for \eqn{p_j}'s.
 }
@@ -54,6 +54,7 @@ Yili Hong
    ppoibin(kk=kk, pp=pp, method = "RF",wts=rep(2,5))
    ppoibin(kk=kk, pp=pp, method = "RNA",wts=rep(2,5))
    ppoibin(kk=kk, pp=pp, method = "NA",wts=rep(2,5))
+   ppoibin(kk=kk, pp=pp, method = "PA",wts=rep(2,5))
    dpoibin(kk=kk, pp=pp,wts=rep(2,5))
    qpoibin(qq=0:10/10,pp=pp,wts=rep(2,5))
    rpoibin(m=2,pp=pp,wts=rep(2,5))
