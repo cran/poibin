@@ -21,6 +21,10 @@ Maintainer: \packageMaintainer{poibin}
 }
 \references{
 Hong, Y. (2013). On computing the distribution function for the Poisson binomial distribution. Computational Statistics & Data Analysis, Vol. 59, pp. 41-51.
+
+R Core Team (2019). ``R: A Language and Environment for Statistical Computing,'' R Foundation for Statistical Computing, Vienna, Austria, url: https://www.R-project.org/.
+
+Singleton, R. C. (1969). An algorithm for computing the mixed radix fast Fourier transform. IEEE Transactions on Audio and Electroacoustics, Vol. 17, pp. 93-103.
 }
 
 \keyword{ package }

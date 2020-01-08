@@ -42,7 +42,7 @@ Hong, Y. (2013). On computing the distribution function for the Poisson binomial
 }
 \author{
 
-Yili Hong
+\packageAuthor{poibin}
 
 }
 
