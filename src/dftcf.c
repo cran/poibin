@@ -806,7 +806,7 @@ double *bvec,int *funcate,double *ex,int *npp, int *wts)
   
   m=*n+1;
   
-  delta=2*PI/m;
+  delta=2*M_PI/m;
   //Rprintf("%u, %u, %lf \n", *nn,*n,delta);
 
   avec[0]=1.0;

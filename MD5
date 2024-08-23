@@ -1,8 +1,8 @@
-c554782ab86e9b43c3a1a66a95e86987 *DESCRIPTION
+ddf13e01b9295ccbbd8ef8d39cd3e681 *DESCRIPTION
 2c924916ecd1799e2f962e2e41d454bf *NAMESPACE
 f514f8a907d4228aae0f87ffb7eefa16 *R/funs.R
-3e2ba35aa56c454a4f6f8c3fa6a73acb *build/partial.rdb
+bd5a95b4d7869e51469f8fd09a0c6f31 *build/partial.rdb
 6987cac71ce4416c250f44472aa92393 *man/poibin-package.Rd
 40af86162c8b81378c4481b587efc9a6 *man/ppoibin.Rd
-81e62e1cb25e7f8aa5b9bef0ecf42c37 *src/dftcf.c
+9e84246b80543dc9008ab0b972d71f78 *src/dftcf.c
 c3953fe7f94baf06511da0cb36ff75a5 *src/poibin_init.c
